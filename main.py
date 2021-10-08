@@ -5,7 +5,13 @@ analyze emails for word frequency
 import email
 import imaplib
 import os
+from html import unescape
 from dotenv import load_dotenv
+
+
+def write_email_to_file(content):
+    with open('email_output.txt', mode='w', encoding='utf-8') as out_file:
+        out_file.write(unescape(content))
 
 
 load_dotenv()
@@ -30,6 +36,7 @@ if result == 'OK':
             print('Date:' + email_message['Date'])
             print('Subject:' + str(email_message['Subject']))
             print('Content:' + str(email_message.get_payload()[0]))
+            write_email_to_file(str(email_message['Subject']) + '\n' + str(email_message.get_payload()[0]))
         break
 
 connection.close()
