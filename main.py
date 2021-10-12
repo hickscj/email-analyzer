@@ -22,7 +22,7 @@ imap_url = os.getenv('IMAP_SERVER')
 connection = imaplib.IMAP4_SSL(imap_url)
 connection.login(user, password)
 
-connection.select('trump')
+connection.select(os.getenv('INBOX_NAME'))
 
 result, data = connection.search(None, 'ALL')
 
@@ -41,32 +41,3 @@ if result == 'OK':
 
 connection.close()
 connection.logout()
-
-
-# import imaplib
-# import pprint
-# import email
-#
-# imap_host = 'imap.mail.yahoo.com'
-# imap_user = 'chadjhicks@yahoo.com'
-# imap_pass = 'etzanyzybvxwywyz'
-#
-# # connect to host using SSL
-# imap = imaplib.IMAP4_SSL(imap_host)
-#
-# # login to server
-# imap.login(imap_user, imap_pass)
-#
-# imap.select('trump')
-#
-# tmp, data = imap.search(None, 'ALL')
-# for num in data[0].split():
-#     tmp, data = imap.fetch(num, '(RFC822)')
-#     print('Message: {0}\n'.format(num))
-#     # pprint.pprint(data[0][1])
-#     msg = email.message_from_bytes(data[0][1])
-#     str(msg.get_payload()[0])
-#
-#     break
-#
-# imap.close()
