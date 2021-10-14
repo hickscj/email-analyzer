@@ -25,14 +25,11 @@ def write_email_to_database(message):
         cxn = sqlite3.connect(db_file)
         print(sqlite3.version)
         if cxn:
-            # insert_sql = f'INSERT INTO email (date, from_email, to_email, subject, content)' \
-            #              f' VALUES ({message["Date"]}, {message["From"]}, {message["To"]}, ' \
-            #              f'{str(message["Subject"])}, {str(message.get_payload()[0])});'
-            print(message['Date'], message['From'], message['To'])
-            # insert_sql = "INSERT INTO email (date_sent) VALUES (?)", (message['Date'])
-            variables = ['10/13/21', 'ksjdf@kljsldkfj.com', 'lskdjflj@lksjdlf.com', 'lksjdflksjdf', ';sldkfjlskdfj']
+            variables = [message['Date'], message['From'], message['To'],
+                         str(message['Subject']), str(message.get_payload()[0])]
             cxn.execute("INSERT INTO email (date_sent, from_email, to_email, subject, content) VALUES (?, ?, ?, ?, ?)",
                         variables)
+            cxn.commit()
     except Error as e:
         print(e)
     finally:
