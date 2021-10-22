@@ -23,7 +23,6 @@ def write_email_to_database(message):
     cxn = None
     try:
         cxn = sqlite3.connect(db_file)
-        print(sqlite3.version)
         if cxn:
             variables = [message['Date'], message['From'], message['To'],
                          str(message['Subject']), str(message.get_payload()[0])]
