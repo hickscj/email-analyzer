@@ -23,16 +23,20 @@ def write_email_to_database(message):
     cxn = None
     try:
         cxn = sqlite3.connect(db_file)
-        print(sqlite3.version)
         if cxn:
-            # insert_sql = f'INSERT INTO email (date, from_email, to_email, subject, content)' \
-            #              f' VALUES ({message["Date"]}, {message["From"]}, {message["To"]}, ' \
-            #              f'{str(message["Subject"])}, {str(message.get_payload()[0])});'
-            print(message['Date'], message['From'], message['To'])
-            # insert_sql = "INSERT INTO email (date_sent) VALUES (?)", (message['Date'])
-            variables = ['10/13/21', 'ksjdf@kljsldkfj.com', 'lskdjflj@lksjdlf.com', 'lksjdflksjdf', ';sldkfjlskdfj']
-            cxn.execute("INSERT INTO email (date_sent, from_email, to_email, subject, content) VALUES (?, ?, ?, ?, ?)",
-                        variables)
+            variables = [message['Date'], message['From'], message['To'],
+                         str(message['Subject']), str(message.get_payload()[0])]
+            cur = cxn.cursor()
+            cur.execute("select id from email where date_sent = ? and subject = ?",
+                        [message['Date'], message['Subject']])
+
+            rows = cur.fetchall()
+            if len(rows) > 0:
+                print("Already in db")
+            else:
+                cxn.execute("INSERT INTO email (date_sent, from_email, to_email, subject, content) VALUES (?, ?, ?, ?, ?)",
+                            variables)
+                cxn.commit()
     except Error as e:
         print(e)
     finally:
@@ -55,7 +59,7 @@ def download_emails():
         result, data = connection.search(None, 'ALL')
 
         if result == 'OK':
-            for num in data[0].split():
+            for idx, num in enumerate(data[0].split()):
                 result, data = connection.uid('fetch', num, '(RFC822)')
                 if result == 'OK':
                     email_message = email.message_from_bytes(data[0][1])
@@ -68,7 +72,8 @@ def download_emails():
                                        .lower().strip().replace(' ', '_')) + '.txt'
                     # write_email_to_file(email_output, file_name)
                     write_email_to_database(email_message)
-                    break
+                    if idx > 3:
+                        break
 
         connection.close()
         connection.logout()
