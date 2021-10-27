@@ -8,6 +8,7 @@ __pycache__/
 .vscode
 
 data/
+app/node_modules/
 
 # C extensions
 *.so
