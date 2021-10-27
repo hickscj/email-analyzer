@@ -11,7 +11,7 @@ from sqlite3 import Error
 
 from dotenv import load_dotenv
 
-db_file = 'emails.db'
+db_file = 'data/emails.db'
 
 
 def write_email_to_file(content, output_file):

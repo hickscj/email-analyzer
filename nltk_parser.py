@@ -54,4 +54,4 @@ def squash_email(email_file_name):
         analyze_text(saved_line)
 
 
-squash_email('email_output.txt')
+squash_email('data/email_output.txt')
